@@ -1,6 +1,7 @@
 package com.daboxen.EscapeRoomUtilities;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -19,16 +20,15 @@ public class TimedItem extends Item {
 	}
 
 	public void inventoryTick(@Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
-		CompoundTag tag = new CompoundTag();
+		@Nullable Integer itemTime = pStack.get(EscapeRoomUtilities.TIME_TO_LIVE);
 
-		if (tag.contains("time_to_live", Tag.TAG_INT)) {
-			tag.putInt("time_to_live", this.timeToLive);
+		if (itemTime == null) {
+			pStack.set(EscapeRoomUtilities.TIME_TO_LIVE, this.timeToLive);
 		} else {
-			int stackTime = tag.getInt("time_to_live");
-			if (stackTime == 0) {
+			if (itemTime == 0) {
 				pStack = pStack.transmuteCopy(this.asItem());
 			} else {
-				tag.putInt("time_to_live", tag.getInt("time_to_live") - 1);
+				pStack.set(EscapeRoomUtilities.TIME_TO_LIVE, --itemTime);
 			}
 		}
 		

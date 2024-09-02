@@ -3,11 +3,15 @@ package com.daboxen.EscapeRoomUtilities;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -67,6 +71,17 @@ public class EscapeRoomUtilities
         );
         public static final DeferredItem<Item> HEAL_ORB = ITEMS.registerSimpleItem("heal_orb", new Item.Properties().food(new FoodProperties.Builder()
                 .alwaysEdible().nutrition(20).saturationModifier(20f).fast().usingConvertsTo(DEPLETED_ORB).build()).fireResistant());
+
+        public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MODID);
+
+        public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> TIME_TO_LIVE = DATA_COMPONENTS.registerComponentType(
+                "time_to_live",
+                builder -> builder
+                        // The codec to read/write the data to disk
+                        .persistent(Codec.intRange(0, Integer.MAX_VALUE))
+                        // The codec to read/write the data across the network
+                        .networkSynchronized(ByteBufCodecs.INT)
+        );
 
         // Creates a creative tab with the id "examplemod:example_tab" for the example item, that is placed after the combat tab
         public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("escape_room_items", () -> CreativeModeTab.builder()
