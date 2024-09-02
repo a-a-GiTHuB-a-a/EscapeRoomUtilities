@@ -3,8 +3,6 @@ package com.daboxen.EscapeRoomUtilities;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
