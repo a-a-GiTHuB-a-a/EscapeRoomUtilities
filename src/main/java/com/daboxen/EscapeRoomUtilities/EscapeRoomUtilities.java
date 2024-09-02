@@ -27,6 +27,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
@@ -34,6 +35,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(EscapeRoomUtilities.MODID)
@@ -56,17 +58,25 @@ public class EscapeRoomUtilities
         public static final DeferredItem<BlockItem> KILLBLOCK_ITEM = ITEMS.registerSimpleBlockItem("killblock", KILLBLOCK);
 
         // Creates a new food item with the id "examplemod:example_id", nutrition 1 and saturation 2
-        public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
-                .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
+        public static final DeferredItem<TimedItem> DEPLETED_ORB = ITEMS.registerItem(
+                "depleted_heal_orb",
+                (prop) -> {
+                        return new TimedItem(prop, 400);
+                },
+                new Item.Properties().fireResistant()
+        );
+        public static final DeferredItem<Item> HEAL_ORB = ITEMS.registerSimpleItem("heal_orb", new Item.Properties().food(new FoodProperties.Builder()
+                .alwaysEdible().nutrition(20).saturationModifier(20f).fast().usingConvertsTo(DEPLETED_ORB).build()).fireResistant());
 
         // Creates a creative tab with the id "examplemod:example_tab" for the example item, that is placed after the combat tab
-        public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("escape_room_tab", () -> CreativeModeTab.builder()
-                .title(Component.translatable("itemGroup.escape_room_utilities")) //The language key for the title of your CreativeModeTab
-                .withTabsBefore(CreativeModeTabs.COMBAT)
-                .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
+        public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("escape_room_items", () -> CreativeModeTab.builder()
+                .title(Component.translatable("itemGroup.escape_room_items")) //The language key for the title of your CreativeModeTab
+                .withTabsBefore(CreativeModeTabs.BUILDING_BLOCKS)
+                .icon(() -> HEAL_ORB.get().getDefaultInstance())
                 .displayItems((parameters, output) -> {
                         output.accept(Items.BEDROCK);
-                        output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+                        output.accept(KILLBLOCK.get());
+                        output.accept(HEAL_ORB.get());
                 }).build());
 
         // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -93,6 +103,8 @@ public class EscapeRoomUtilities
 
                 // Register our mod's ModConfigSpec so that FML can create and load the config file for us
                 modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+                DEPLETED_ORB.asItem().inventoryTick(null, null, null, 0, false);
         }
 
         private void commonSetup(final FMLCommonSetupEvent event)
