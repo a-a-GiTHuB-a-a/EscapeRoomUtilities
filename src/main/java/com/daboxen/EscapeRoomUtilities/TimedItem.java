@@ -1,5 +1,7 @@
 package com.daboxen.EscapeRoomUtilities;
 
+import java.util.function.Supplier;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -10,11 +12,13 @@ import net.minecraft.world.level.Level;
 
 public class TimedItem extends Item {
 	public int timeToLive;
+	public Supplier<Item> convertsTo;
 
-	public TimedItem(Properties props, int timeToLive) {
+	public TimedItem(Properties props, int timeToLive, Supplier<Item> convertsTo) {
 		super(props);
 
 		this.timeToLive = timeToLive;
+		this.convertsTo = convertsTo;
 	}
 
 	public void inventoryTick(@Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
@@ -24,7 +28,7 @@ public class TimedItem extends Item {
 			pStack.set(EscapeRoomUtilities.TIME_TO_LIVE, this.timeToLive);
 		} else {
 			if (itemTime == 0) {
-				pStack = pStack.transmuteCopy(this.asItem());
+				pStack = pStack.transmuteCopy(convertsTo.get());
 			} else {
 				pStack.set(EscapeRoomUtilities.TIME_TO_LIVE, --itemTime);
 			}

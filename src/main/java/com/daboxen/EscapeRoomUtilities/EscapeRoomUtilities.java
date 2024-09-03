@@ -1,5 +1,7 @@
 package com.daboxen.EscapeRoomUtilities;
 
+import java.util.Properties;
+
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -11,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -59,16 +62,15 @@ public class EscapeRoomUtilities
         // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
         public static final DeferredItem<BlockItem> KILLBLOCK_ITEM = ITEMS.registerSimpleBlockItem("killblock", KILLBLOCK);
 
-        // Creates a new food item with the id "examplemod:example_id", nutrition 1 and saturation 2
         public static final DeferredItem<TimedItem> DEPLETED_ORB = ITEMS.registerItem(
                 "depleted_heal_orb",
                 (prop) -> {
-                        return new TimedItem(prop, 400);
+                        return new TimedItem(prop, 400, EscapeRoomUtilities.HEAL_ORB);
                 },
                 new Item.Properties().fireResistant()
         );
         public static final DeferredItem<Item> HEAL_ORB = ITEMS.registerSimpleItem("heal_orb", new Item.Properties().food(new FoodProperties.Builder()
-                .alwaysEdible().nutrition(20).saturationModifier(20f).fast().usingConvertsTo(DEPLETED_ORB).build()).fireResistant());
+                .alwaysEdible().nutrition(20).saturationModifier(.5f).fast().usingConvertsTo(DEPLETED_ORB).build()).fireResistant());
 
         public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MODID);
 
