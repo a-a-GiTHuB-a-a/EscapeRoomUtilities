@@ -70,7 +70,7 @@ public class EscapeRoomUtilities
                 new Item.Properties().fireResistant()
         );
         public static final DeferredItem<Item> HEAL_ORB = ITEMS.registerSimpleItem("heal_orb", new Item.Properties().fireResistant().food(new FoodProperties.Builder()
-                .alwaysEdible().nutrition(20).saturationModifier(.5f).fast().usingConvertsTo(() -> DEPLETED_ORB.get()).build()));
+                .alwaysEdible().nutrition(20).saturationModifier(.5f).fast().usingConvertsTo(() -> EscapeRoomUtilities.DEPLETED_ORB.get()).build()));
 
         public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MODID);
 
