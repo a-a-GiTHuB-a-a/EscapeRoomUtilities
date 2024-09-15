@@ -21,6 +21,7 @@ public class TimedItem extends Item {
 		this.convertsTo = convertsTo;
 	}
 
+	@Override
 	public void inventoryTick(@Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
 		@Nullable Integer itemTime = pStack.get(EscapeRoomUtilities.TIME_TO_LIVE);
 
@@ -30,7 +31,7 @@ public class TimedItem extends Item {
 			if (itemTime == 0) {
 				pStack = pStack.transmuteCopy(convertsTo.get());
 			} else {
-				pStack.set(EscapeRoomUtilities.TIME_TO_LIVE, --itemTime);
+				pStack.set(EscapeRoomUtilities.TIME_TO_LIVE, itemTime - 1);
 			}
 		}
 		
