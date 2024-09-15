@@ -52,7 +52,6 @@ public class EscapeRoomUtilities
         public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
         // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "examplemod" namespace
         public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
         // Creates a new Block with the id "examplemod:example_block", combining the namespace and path
         public static final DeferredBlock<Block> KILLBLOCK = BLOCKS.registerSimpleBlock("killblock", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
         // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
@@ -74,7 +73,7 @@ public class EscapeRoomUtilities
                 "time_to_live",
                 builder -> builder
                         // The codec to read/write the data to disk
-                        .persistent(Codec.intRange(0, Integer.MAX_VALUE))
+                        .persistent(Codec.INT)
                         // The codec to read/write the data across the network
                         .networkSynchronized(ByteBufCodecs.INT)
         );
