@@ -57,15 +57,8 @@ public class EscapeRoomUtilities
         // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
         public static final DeferredItem<BlockItem> KILLBLOCK_ITEM = ITEMS.registerSimpleBlockItem("killblock", KILLBLOCK);
 
-        public static final DeferredItem<TimedItem> DEPLETED_ORB = ITEMS.registerItem(
-                "depleted_heal_orb",
-                (prop) -> {
-                        return new TimedItem(prop, 400, EscapeRoomUtilities.HEAL_ORB);
-                },
-                new Item.Properties().fireResistant()
-        );
         public static final DeferredItem<Item> HEAL_ORB = ITEMS.registerSimpleItem("heal_orb", new Item.Properties().fireResistant().food(new FoodProperties.Builder()
-                .alwaysEdible().nutrition(20).saturationModifier(.5f).fast().usingConvertsTo(() -> EscapeRoomUtilities.DEPLETED_ORB.get()).build()));
+                .alwaysEdible().nutrition(20).saturationModifier(.5f).fast().usingConvertsTo(() -> EscapeRoomUtilities.HEAL_ORB.get()).build()));
 
         public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MODID);
 
